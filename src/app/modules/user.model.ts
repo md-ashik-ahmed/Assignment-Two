@@ -83,7 +83,7 @@ const UserSchema = new Schema<TUsers, UserModel>({
 });
 
 UserSchema.pre('save', async function (next) {
-  // ---------------------------------------------------------
+  // ------------------------------------------------------------
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   // ------------------------------------------------------------
   const user = this;
