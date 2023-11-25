@@ -18,13 +18,13 @@ export type TOrders = {
 };
 
 export type TUsers = {
-  userId: string;
+  userId: number;
   username: string;
   password: string;
   fullName: TUserName;
   age: number;
   email: string;
-  // isActive?: 'active' | 'blocked';
+  isActive: 'active' | 'blocked';
   hobbies: string[];
   address: TAddress;
   orders?: TOrders[];
@@ -32,5 +32,5 @@ export type TUsers = {
 };
 
 export interface UserModel extends Model<TUsers> {
-  isUserExists(id: string): Promise<TUsers | null>;
+  isUserExists(userId: number): Promise<TUsers | null>;
 }

@@ -64,7 +64,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getSingleUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId: number = Number(req.params.userId);
 
     const result = await UserServices.getSingleUserFromDB(userId);
 
@@ -87,7 +87,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId: number = Number(req.params.userId);
 
     const result = await UserServices.deleteUserFromDB(userId);
 
@@ -110,7 +110,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId: number = Number(req.params.userId);
     const updatedUser = req.body;
 
     const existingUser = await UserServices.getSingleUserFromDB(userId);

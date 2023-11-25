@@ -6,6 +6,8 @@ import {
   TUsers,
   UserModel,
 } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -54,7 +56,7 @@ const OrdersSchema = new Schema<TOrders>({
 });
 
 const UserSchema = new Schema<TUsers, UserModel>({
-  userId: { type: String, required: [true, 'ID is required'], unique: true },
+  userId: { type: Number, required: [true, 'ID is required'], unique: true },
   username: {
     type: String,
     required: [true, 'UserName is required'],
@@ -63,7 +65,7 @@ const UserSchema = new Schema<TUsers, UserModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    // maxlength: [20, 'Password can not be more than 20 characters'],
+    maxlength: [20, 'Password can not be more than 20 characters'],
   },
   fullName: { type: userNameSchema, required: [true, 'Full Name is required'] },
   age: { type: Number, required: [true, 'Age is required'] },
@@ -80,23 +82,21 @@ const UserSchema = new Schema<TUsers, UserModel>({
   },
 });
 
-export const Users = model<TUsers, UserModel>('Users', UserSchema);
-
-// isActive: {
-//   type: String,
-//   enum: {
-//     values: ['active', 'blocked'],
-//     message: '{VALUE} is not a valid status',
-//   },
-//   default: 'active',
-// },
-
-UserSchema.post('save', function (doc, next) {
-  doc.password = '';
+UserSchema.pre('save', async function (next) {
+  // ---------------------------------------------------------
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  // ------------------------------------------------------------
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
   next();
 });
 
-UserSchema.statics.isUserExists = async function (userId: string) {
-  const existingUser = await Users.findOne({ userId });
-  return existingUser;
-};
+// UserSchema.statics.isUserExists = async function (userId: number) {
+//   const existingUser = await Users.findOne({ userId });
+//   return existingUser;
+// };
+
+export const Users = model<TUsers, UserModel>('Users', UserSchema);
