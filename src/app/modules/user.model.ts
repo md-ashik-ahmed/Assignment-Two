@@ -94,6 +94,22 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// Query Middleware
+UserSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+UserSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 // UserSchema.statics.isUserExists = async function (userId: number) {
 //   const existingUser = await Users.findOne({ userId });
 //   return existingUser;
