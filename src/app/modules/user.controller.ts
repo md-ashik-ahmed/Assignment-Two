@@ -140,10 +140,81 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+// create orders for single user in data base
+// const createUserOrders = async (req: Request, res: Response) => {
+//   try {
+//     const orderId = Number(req.params.userId);
+//     const newOrder = req.body;
+//     await userServices.userOrdersCreateInToDb(newOrder, orderId);
+//     res.status(200).json({
+//       success: true,
+//       message: "Order created successfully!",
+//       data: null,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "User not found",
+//       error: {
+//         code: 404,
+//         description: "User not found!",
+//       },
+//     });
+//   }
+// };
+
+//get order of single user
+
+const getOrdersSingleUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserServices.getOrdersFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: error.message,
+      },
+    });
+  }
+};
+
+const getTotalPriceOrder = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserServices.getTotalOrderPriceFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice: result,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: error.message,
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   deleteUser,
   updateUser,
+  getOrdersSingleUser,
+  getTotalPriceOrder,
 };

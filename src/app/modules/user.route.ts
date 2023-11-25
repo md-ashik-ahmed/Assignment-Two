@@ -13,4 +13,11 @@ router.put('/api/users/:userId', UserControllers.updateUser);
 
 router.get('/api/users', UserControllers.getAllUsers);
 
+router.get('/users/:userId/orders', UserControllers.getOrdersSingleUser);
+
+router.get(
+  '/users/:userId/orders/total-price',
+  UserControllers.getTotalPriceOrder,
+);
+
 export const UserRoutes = router;

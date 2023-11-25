@@ -41,10 +41,34 @@ const updateUserInDB = async (userId: number, userInfo: any) => {
   return result;
 };
 
+const getOrdersFromDB = async (userId: number) => {
+  const result = await Users.findOne({ userId: userId }, { orders: 1 });
+  if (!result) {
+    throw new Error('user not found');
+  }
+  return result;
+};
+
+const getTotalOrderPriceFromDB = async (userId: number) => {
+  const result = await Users.findOne({ userId });
+  if (!result || !result.orders) {
+    throw new Error('user not found');
+  }
+
+  const totalPrice = result.orders.reduce((total, order) => {
+    const totalOrderPrice = order.price * order.quantity;
+    return total + totalOrderPrice;
+  }, 0);
+
+  return totalPrice;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
   deleteUserFromDB,
   updateUserInDB,
+  getOrdersFromDB,
+  getTotalOrderPriceFromDB,
 };
