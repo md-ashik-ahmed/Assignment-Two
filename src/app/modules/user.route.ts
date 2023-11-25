@@ -13,10 +13,12 @@ router.put('/api/users/:userId', UserControllers.updateUser);
 
 router.get('/api/users', UserControllers.getAllUsers);
 
-router.get('/users/:userId/orders', UserControllers.getOrdersSingleUser);
+router.put('/api/users/:userId/orders', UserControllers.createUserOrders);
+
+router.get('/api/users/:userId/orders', UserControllers.getOrdersSingleUser);
 
 router.get(
-  '/users/:userId/orders/total-price',
+  '/api/users/:userId/orders/total-price',
   UserControllers.getTotalPriceOrder,
 );
 

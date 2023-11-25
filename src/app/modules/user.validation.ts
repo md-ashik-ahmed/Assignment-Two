@@ -1,20 +1,8 @@
 import { z } from 'zod';
 
 const NameValidationSchema = z.object({
-  firstName: z
-    .string()
-    .min(1)
-    .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
-      message: 'First Name must start with a capital letter',
-    }),
-  lastName: z
-    .string()
-    .min(1)
-    .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
-      message: 'Last Name must start with a capital letter',
-    }),
+  firstName: z.string().min(1).max(20),
+  lastName: z.string().min(1).max(20),
 });
 
 const AddressValidationSchema = z.object({
@@ -30,16 +18,17 @@ const OrderValidationSchema = z.object({
 });
 
 const userValidationSchema = z.object({
-  userId: z.string(),
+  userId: z.number(),
   username: z.string(),
   password: z.string(),
   fullName: NameValidationSchema,
   age: z.number(),
   email: z.string().email(),
-
+  isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: AddressValidationSchema,
   orders: z.array(OrderValidationSchema),
+  isDeleted: z.boolean().optional().default(false),
 });
 
 export default userValidationSchema;

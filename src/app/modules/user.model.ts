@@ -70,7 +70,7 @@ const UserSchema = new Schema<TUsers, UserModel>({
   fullName: { type: userNameSchema, required: [true, 'Full Name is required'] },
   age: { type: Number, required: [true, 'Age is required'] },
   email: { type: String, required: [true, 'Email is required'] },
-
+  isActive: { type: Boolean, required: true },
   hobbies: {
     type: [String],
   },

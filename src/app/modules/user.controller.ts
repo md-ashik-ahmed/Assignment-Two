@@ -1,14 +1,18 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-// import userValidationSchema from './user.validation';
+import userValidationSchema from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const user = req.body;
-    const result = await UserServices.createUserIntoDB(user);
+    const userData = req.body;
+
+    const zodParsedData = userValidationSchema.parse(userData);
+
+    const result = await UserServices.createUserIntoDB(zodParsedData);
+
     res.status(200).json({
       success: true,
-      message: 'Created succesfully',
+      message: 'User created succesfully',
       data: result,
     });
   } catch (err: any) {
@@ -19,27 +23,6 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
-
-// const createUser = async (req: Request, res: Response) => {
-//   try {
-//     const { user: userData } = req.body;
-//     const zodParsedData = userValidationSchema.parse(userData);
-
-//     const result = await UserServices.createUserIntoDB(zodParsedData);
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'User created succesfully',
-//       data: result,
-//     });
-//   } catch (err: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: err.message || 'something went wrong',
-//       error: err,
-//     });
-//   }
-// };
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -140,30 +123,27 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-// create orders for single user in data base
-// const createUserOrders = async (req: Request, res: Response) => {
-//   try {
-//     const orderId = Number(req.params.userId);
-//     const newOrder = req.body;
-//     await userServices.userOrdersCreateInToDb(newOrder, orderId);
-//     res.status(200).json({
-//       success: true,
-//       message: "Order created successfully!",
-//       data: null,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: "User not found",
-//       error: {
-//         code: 404,
-//         description: "User not found!",
-//       },
-//     });
-//   }
-// };
-
-//get order of single user
+const createUserOrders = async (req: Request, res: Response) => {
+  try {
+    const orderId = Number(req.params.userId);
+    const newOrder = req.body;
+    await UserServices.userOrdersCreateInToDb(newOrder, orderId);
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
 
 const getOrdersSingleUser = async (req: Request, res: Response) => {
   try {
@@ -215,6 +195,7 @@ export const UserControllers = {
   getSingleUser,
   deleteUser,
   updateUser,
+  createUserOrders,
   getOrdersSingleUser,
   getTotalPriceOrder,
 };
