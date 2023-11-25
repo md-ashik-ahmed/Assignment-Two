@@ -77,7 +77,7 @@ const deleteUser = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'User deleted succesfully',
-      data: result,
+      data: null,
     });
   } catch (err: any) {
     res.status(500).json({
@@ -172,7 +172,7 @@ const getTotalPriceOrder = async (req: Request, res: Response) => {
     const result = await UserServices.getTotalOrderPriceFromDB(userId);
     res.status(200).json({
       success: true,
-      message: 'Total price calculated successfully!',
+      message: 'Get Total Price!',
       data: {
         totalPrice: result,
       },

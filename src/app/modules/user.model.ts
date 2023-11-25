@@ -14,14 +14,14 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     required: [true, 'First Name is required'],
     trim: true,
-    maxlength: [20, 'Name can not be more than 20 characters'],
+    maxlength: [20, 'First Name can not be more than 20 characters'],
   },
 
   lastName: {
     type: String,
     trim: true,
     required: [true, 'Last Name is required'],
-    maxlength: [20, 'Name can not be more than 20 characters'],
+    maxlength: [20, 'Last Name can not be more than 20 characters'],
   },
 });
 
@@ -99,7 +99,6 @@ UserSchema.post('save', function (doc, next) {
   next();
 });
 
-// Query Middleware
 UserSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
@@ -115,9 +114,10 @@ UserSchema.pre('aggregate', function (next) {
   this.pipeline().push({ $project: { password: 0 } });
   next();
 });
-// UserSchema.statics.isUserExists = async function (userId: number) {
-//   const existingUser = await Users.findOne({ userId });
-//   return existingUser;
-// };
+
+UserSchema.statics.isUserExists = async function (userId: number) {
+  const existingUser = await Users.findOne({ userId });
+  return existingUser;
+};
 
 export const Users = model<TUsers, UserModel>('Users', UserSchema);

@@ -1,35 +1,18 @@
 import { TUsers, TOrders } from './user.interface';
 import { Users } from './user.model';
 
-const createUserIntoDB = async (user: TUsers) => {
-  const result = await Users.create(user);
+const createUserIntoDB = async (userData: TUsers) => {
+  if (await Users.isUserExists(userData.userId)) {
+    throw new Error('User already exists!');
+  }
+  const result = await Users.create(userData);
   return result;
 };
-
-// =======================================================
-
-// const createUserIntoDB = async (userData: TUsers) => {
-//   if (await Users.isUserExists(userData.userId)) {
-//     throw new Error('User already exists!');
-//   }
-//   const result = await Users.create(userData);
-//   return result;
-// };
 
 const getAllUsersFromDB = async () => {
   const result = await Users.aggregate();
   return result;
 };
-
-// const getSingleUserFromDB = async (userId: number) => {
-//   try {
-//     const result = await Users.findOne({ userId: userId }).exec();
-//     return result;
-//   } catch (error) {
-//     console.error('Error fetching user:', error);
-//     throw error;
-//   }
-// };
 
 const getSingleUserFromDB = async (userId: number) => {
   const result = await Users.aggregate([{ $match: { userId } }]);
@@ -71,12 +54,11 @@ const userOrdersCreateInToDb = async (newOrder: TOrders, id: number) => {
 const getTotalOrderPriceFromDB = async (userId: number) => {
   const result = await Users.findOne({ userId });
   if (!result || !result.orders) {
-    throw new Error('user not found');
+    throw new Error('User not found');
   }
-
   const totalPrice = result.orders.reduce((total, order) => {
-    const totalOrderPrice = order.price * order.quantity;
-    return total + totalOrderPrice;
+    const price = order.price * order.quantity;
+    return total + price;
   }, 0);
 
   return totalPrice;
