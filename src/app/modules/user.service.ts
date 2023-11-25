@@ -17,18 +17,23 @@ const createUserIntoDB = async (user: TUsers) => {
 // };
 
 const getAllUsersFromDB = async () => {
-  const result = await Users.find();
+  const result = await Users.aggregate();
   return result;
 };
 
+// const getSingleUserFromDB = async (userId: number) => {
+//   try {
+//     const result = await Users.findOne({ userId: userId }).exec();
+//     return result;
+//   } catch (error) {
+//     console.error('Error fetching user:', error);
+//     throw error;
+//   }
+// };
+
 const getSingleUserFromDB = async (userId: number) => {
-  try {
-    const result = await Users.findOne({ userId: userId }).exec();
-    return result;
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    throw error;
-  }
+  const result = await Users.aggregate([{ $match: { userId } }]);
+  return result;
 };
 
 const deleteUserFromDB = async (userId: number) => {

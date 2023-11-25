@@ -110,6 +110,11 @@ UserSchema.pre('findOne', function (next) {
   next();
 });
 
+UserSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  this.pipeline().push({ $project: { password: 0 } });
+  next();
+});
 // UserSchema.statics.isUserExists = async function (userId: number) {
 //   const existingUser = await Users.findOne({ userId });
 //   return existingUser;

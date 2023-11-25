@@ -23,7 +23,7 @@ const userValidationSchema = z.object({
   password: z.string(),
   fullName: NameValidationSchema,
   age: z.number(),
-  email: z.string().email(),
+  email: z.string().email({ message: 'Invalid email address' }),
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: AddressValidationSchema,
