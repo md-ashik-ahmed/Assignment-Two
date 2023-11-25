@@ -24,10 +24,11 @@ export type TUsers = {
   fullName: TUserName;
   age: number;
   email: string;
-  isActive?: 'active' | 'blocked';
-  hobbies: [string];
+  // isActive?: 'active' | 'blocked';
+  hobbies: string[];
   address: TAddress;
-  orders?: TOrders;
+  orders?: TOrders[];
+  isDeleted: boolean;
 };
 
 export interface UserModel extends Model<TUsers> {

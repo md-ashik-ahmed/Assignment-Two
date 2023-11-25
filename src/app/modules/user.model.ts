@@ -11,11 +11,15 @@ const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
+    trim: true,
+    maxlength: [20, 'Name can not be more than 20 characters'],
   },
 
   lastName: {
     type: String,
+    trim: true,
     required: [true, 'Last Name is required'],
+    maxlength: [20, 'Name can not be more than 20 characters'],
   },
 });
 
@@ -59,34 +63,40 @@ const UserSchema = new Schema<TUsers, UserModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    maxlength: [20, 'Password can not be more than 20 characters'],
+    // maxlength: [20, 'Password can not be more than 20 characters'],
   },
   fullName: { type: userNameSchema, required: [true, 'Full Name is required'] },
   age: { type: Number, required: [true, 'Age is required'] },
   email: { type: String, required: [true, 'Email is required'] },
-  // isActive: {
-  //   type: String,
-  //   enum: {
-  //     values: ['active', 'blocked'],
-  //     message: '{VALUE} is not a valid status',
-  //   },
-  //   default: 'active',
-  // },
+
   hobbies: {
     type: [String],
   },
   address: { type: AddressSchema, required: true },
   orders: [{ type: OrdersSchema }],
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// UserSchema.post('save', function (doc, next) {
-//   doc.password = '';
-//   next();
-// });
-
-// UserSchema.statics.isUserExists = async function (id: string) {
-//   const existingUser = await Users.findOne({ id });
-//   return existingUser;
-// };
-
 export const Users = model<TUsers, UserModel>('Users', UserSchema);
+
+// isActive: {
+//   type: String,
+//   enum: {
+//     values: ['active', 'blocked'],
+//     message: '{VALUE} is not a valid status',
+//   },
+//   default: 'active',
+// },
+
+UserSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+UserSchema.statics.isUserExists = async function (userId: string) {
+  const existingUser = await Users.findOne({ userId });
+  return existingUser;
+};
